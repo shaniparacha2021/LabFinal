@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Loader2, Shield, Mail, ArrowLeft } from 'lucide-react'
 
-export default function SuperAdminVerify() {
+function SuperAdminVerifyContent() {
   const [code, setCode] = useState(['', '', '', '', '', ''])
   const [loading, setLoading] = useState(false)
   const [resendLoading, setResendLoading] = useState(false)
@@ -248,5 +248,34 @@ export default function SuperAdminVerify() {
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+            <Mail className="h-6 w-6 text-green-600" />
+          </div>
+          <CardTitle className="text-2xl font-bold">Loading...</CardTitle>
+          <CardDescription>
+            Please wait while we load the verification page
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto" />
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
+export default function SuperAdminVerify() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <SuperAdminVerifyContent />
+    </Suspense>
   )
 }
