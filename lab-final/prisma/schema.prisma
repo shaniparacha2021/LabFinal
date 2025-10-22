@@ -12,20 +12,26 @@ datasource db {
 
 // User Management
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String
-  role      UserRole @default(USER)
-  tenant_id String?
-  is_active Boolean  @default(true)
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id            String   @id @default(cuid())
+  email         String   @unique
+  name          String
+  role          UserRole @default(USER)
+  tenant_id     String?
+  password_hash String?  // Added for authentication
+  is_active     Boolean  @default(true)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
 
   // Relations
-  tenant    Tenant? @relation(fields: [tenant_id], references: [id])
-  patients  Patient[]
-  reports   Report[]
-  doctors   Doctor[]
+  tenant            Tenant?            @relation(fields: [tenant_id], references: [id])
+  patients          Patient[]
+  reports           Report[]
+  doctors           Doctor[]
+  verificationCodes VerificationCode[]
+  loginAttempts     LoginAttempt[]
+  accountLockouts   AccountLockout[]
+  activityLogs      ActivityLog[]
+  userSessions      UserSession[]
 
   @@map("users")
 }
@@ -139,6 +145,83 @@ model Doctor {
   tenant Tenant @relation(fields: [tenant_id], references: [id])
 
   @@map("doctors")
+}
+
+// Authentication Tables
+model VerificationCode {
+  id         String   @id @default(cuid())
+  user_id    String
+  email      String
+  code       String
+  expires_at DateTime
+  is_used    Boolean  @default(false)
+  used_at    DateTime?
+  created_at DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("verification_codes")
+}
+
+model LoginAttempt {
+  id         String   @id @default(cuid())
+  user_id    String?
+  email      String
+  success    Boolean
+  ip_address String?
+  user_agent String?
+  created_at DateTime @default(now())
+
+  // Relations
+  user User? @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("login_attempts")
+}
+
+model AccountLockout {
+  id            String   @id @default(cuid())
+  user_id       String
+  lockout_until DateTime
+  is_active     Boolean  @default(true)
+  reason        String?
+  created_at    DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("account_lockouts")
+}
+
+model ActivityLog {
+  id         String   @id @default(cuid())
+  user_id    String?
+  email      String?
+  action     String
+  ip_address String?
+  user_agent String?
+  timestamp  DateTime @default(now())
+
+  // Relations
+  user User? @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("activity_logs")
+}
+
+model UserSession {
+  id            String   @id @default(cuid())
+  user_id       String
+  session_token String   @unique
+  expires_at    DateTime
+  is_active     Boolean  @default(true)
+  ip_address    String?
+  user_agent    String?
+  created_at    DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("user_sessions")
 }
 
 // Enums
