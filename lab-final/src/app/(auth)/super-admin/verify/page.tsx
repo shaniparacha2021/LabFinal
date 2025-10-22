@@ -16,10 +16,15 @@ function SuperAdminVerifyContent() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [countdown, setCountdown] = useState(0)
+  const [email, setEmail] = useState<string | null>(null)
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
   const router = useRouter()
   const searchParams = useSearchParams()
-  const email = searchParams.get('email')
+  
+  useEffect(() => {
+    const emailParam = searchParams.get('email')
+    setEmail(emailParam)
+  }, [searchParams])
 
   useEffect(() => {
     if (!email) {
@@ -151,6 +156,28 @@ function SuperAdminVerifyContent() {
     } finally {
       setResendLoading(false)
     }
+  }
+
+  // Show loading while email is being resolved
+  if (!email) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+              <Mail className="h-6 w-6 text-green-600" />
+            </div>
+            <CardTitle className="text-2xl font-bold">Loading...</CardTitle>
+            <CardDescription>
+              Please wait while we load the verification page
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="text-center">
+            <Loader2 className="h-8 w-8 animate-spin mx-auto" />
+          </CardContent>
+        </Card>
+      </div>
+    )
   }
 
   return (
