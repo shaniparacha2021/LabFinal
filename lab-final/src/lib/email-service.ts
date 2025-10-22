@@ -243,6 +243,31 @@ export async function sendPasswordResetEmail(email: string, resetToken: string):
   }
 }
 
+// Send password change confirmation email
+export async function sendPasswordChangeEmail(to: string): Promise<void> {
+  try {
+    await transporter.sendMail({
+      from: process.env.SMTP_FROM || 'Lab Management System <shaniparacha2021@gmail.com>',
+      to: to,
+      subject: 'Password Changed - Lab Management System',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #2563eb;">Password Changed Successfully</h2>
+          <p>Your password has been successfully changed.</p>
+          <p>If you did not make this change, please contact support immediately.</p>
+          <hr style="margin: 20px 0;">
+          <p style="color: #666; font-size: 12px;">
+            This is an automated message from Lab Management System.
+          </p>
+        </div>
+      `
+    })
+  } catch (error) {
+    console.error('Error sending password change email:', error)
+    throw error
+  }
+}
+
 // Test email configuration
 export async function testEmailConfiguration(): Promise<boolean> {
   try {
