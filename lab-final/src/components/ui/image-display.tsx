@@ -6,7 +6,7 @@ import { getAssetUrl } from '@/lib/file-utils'
 
 interface ImageDisplayProps {
   filename: string
-  type: 'images' | 'branding' | 'uploads'
+  type: 'IMAGES' | 'BRANDING' | 'UPLOADS'
   alt: string
   className?: string
   width?: number
@@ -107,7 +107,7 @@ export function Avatar({ filename, name, size = 'md', className = '' }: AvatarPr
     return (
       <ImageDisplay
         filename={filename}
-        type="images"
+        type="IMAGES"
         alt={name}
         className={`rounded-full ${sizeClasses[size]} ${className}`}
       />

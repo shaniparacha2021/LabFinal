@@ -11,10 +11,10 @@ export const ASSETS_PATHS = {
 
 // File type categories
 export const FILE_TYPES = {
-  IMAGE: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'],
-  PDF: ['pdf'],
-  DOCUMENT: ['doc', 'docx', 'txt'],
-  EXCEL: ['xls', 'xlsx', 'csv'],
+  IMAGE: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'] as string[],
+  PDF: ['pdf'] as string[],
+  DOCUMENT: ['doc', 'docx', 'txt'] as string[],
+  EXCEL: ['xls', 'xlsx', 'csv'] as string[],
 } as const
 
 // Generate unique filename
