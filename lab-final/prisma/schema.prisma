@@ -1,0 +1,175 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User Management
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  role      UserRole @default(USER)
+  tenant_id String?
+  is_active Boolean  @default(true)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relations
+  tenant    Tenant? @relation(fields: [tenant_id], references: [id])
+  patients  Patient[]
+  reports   Report[]
+  doctors   Doctor[]
+
+  @@map("users")
+}
+
+// Tenant Management (Lab/Admin)
+model Tenant {
+  id                  String            @id @default(cuid())
+  name                String
+  slug                String            @unique
+  subscription_type   SubscriptionType  @default(TRIAL)
+  subscription_status SubscriptionStatus @default(ACTIVE)
+  features            String[]          @default([])
+  settings            Json?
+  // Branding assets stored as file names
+  logo_filename       String?
+  header_filename     String?
+  footer_filename     String?
+  watermark_filename  String?
+  created_at          DateTime          @default(now())
+  updated_at          DateTime          @updatedAt
+
+  // Relations
+  users     User[]
+  patients  Patient[]
+  tests     Test[]
+  reports   Report[]
+  doctors   Doctor[]
+
+  @@map("tenants")
+}
+
+// Patient Management
+model Patient {
+  id        String   @id @default(cuid())
+  tenant_id String
+  name      String
+  email     String?
+  phone     String?
+  age       Int?
+  gender    Gender
+  address   String?
+  // Patient photo stored as file name
+  photo_filename String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relations
+  tenant Tenant @relation(fields: [tenant_id], references: [id])
+  reports Report[]
+
+  @@map("patients")
+}
+
+// Test Templates
+model Test {
+  id          String   @id @default(cuid())
+  tenant_id   String
+  name        String
+  description String?
+  price       Decimal  @default(0)
+  parameters  Json     // Store test parameters as JSON
+  is_active   Boolean  @default(true)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  // Relations
+  tenant  Tenant  @relation(fields: [tenant_id], references: [id])
+  reports Report[]
+
+  @@map("tests")
+}
+
+// Test Reports
+model Report {
+  id        String      @id @default(cuid())
+  tenant_id String
+  patient_id String
+  test_id   String
+  results   Json        // Store test results as JSON
+  status    ReportStatus @default(PENDING)
+  // Report files stored as file names
+  pdf_filename String?  // Generated PDF report
+  created_by String?
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+
+  // Relations
+  tenant  Tenant  @relation(fields: [tenant_id], references: [id])
+  patient Patient @relation(fields: [patient_id], references: [id])
+  test    Test    @relation(fields: [test_id], references: [id])
+  user    User?   @relation(fields: [created_by], references: [id])
+
+  @@map("reports")
+}
+
+// Doctor Management
+model Doctor {
+  id              String   @id @default(cuid())
+  tenant_id       String
+  name            String
+  specialization  String
+  commission_rate Decimal  @default(0)
+  phone           String?
+  email           String?
+  // Doctor photo stored as file name
+  photo_filename  String?
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  // Relations
+  tenant Tenant @relation(fields: [tenant_id], references: [id])
+
+  @@map("doctors")
+}
+
+// Enums
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  USER
+}
+
+enum SubscriptionType {
+  TRIAL
+  MONTHLY
+  ANNUAL
+  LIFETIME
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  INACTIVE
+  CANCELLED
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum ReportStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
