@@ -23,7 +23,7 @@ export default function SuperAdminLogin() {
     setError('')
 
     try {
-      const response = await fetch('/api/auth/super-admin/login', {
+      const response = await fetch('/api/auth/super-admin/login-simple', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -34,8 +34,8 @@ export default function SuperAdminLogin() {
       const data = await response.json()
 
       if (response.ok) {
-        // Redirect to verification page
-        router.push(`/super-admin/verify?email=${encodeURIComponent(email)}`)
+        // Redirect directly to dashboard (skip 2FA for now)
+        router.push('/super-admin/dashboard')
       } else {
         if (data.code === 'ACCOUNT_LOCKED') {
           setError(`Account is temporarily locked. Please try again after ${new Date(data.lockoutUntil).toLocaleString()}`)
