@@ -1,9 +1,10 @@
 -- =====================================================
--- ADMIN NOTIFICATIONS & COMMUNICATION SYSTEM SCHEMA
+-- ADMIN NOTIFICATIONS & COMMUNICATION SYSTEM SCHEMA (FIXED)
 -- =====================================================
 -- This file creates the complete notifications and communication system
 -- for Super Admin to send direct notifications to one or multiple Admins
 -- FIXED: All foreign key constraints removed to avoid conflicts
+-- FIXED: Function parameter order fixed to avoid default value conflicts
 
 -- =====================================================
 -- STEP 1: CREATE ENUMS AND TYPES
@@ -641,5 +642,6 @@ SELECT '🔧 FIXED: Type creation uses safe DO blocks to avoid conflicts with ex
 SELECT '🔧 FIXED: Function creation uses DROP FUNCTION IF EXISTS to avoid return type conflicts' as function_fix;
 SELECT '🔧 FIXED: Trigger creation uses DROP TRIGGER IF EXISTS to avoid trigger conflicts' as trigger_fix;
 SELECT '🔧 FIXED: Function update_updated_at_column uses CREATE OR REPLACE to avoid dependency conflicts' as function_dependency_fix;
+SELECT '🔧 FIXED: Function parameter order fixed to avoid default value conflicts' as parameter_fix;
 SELECT '🎨 NEW: Complete notifications and communication system with delivery tracking' as notification_feature;
 SELECT '🎨 NEW: Complete admin account controls with suspension, reactivation, and permission management' as account_control_feature;
