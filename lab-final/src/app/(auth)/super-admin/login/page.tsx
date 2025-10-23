@@ -38,8 +38,8 @@ export default function SuperAdminLogin() {
 
       if (response.ok) {
         console.log('✅ Login successful, redirecting to verification page')
-        // Redirect to verification page for 2FA
-        const verifyUrl = `/super-admin/verify?email=${encodeURIComponent(email)}`
+        // Redirect to simple verification page for testing
+        const verifyUrl = `/simple-verify?email=${encodeURIComponent(email)}`
         console.log('🔗 Verification URL:', verifyUrl)
         router.push(verifyUrl)
       } else {
