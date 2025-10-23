@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
         p_backup_type: backupType,
         p_backup_name: backupName,
         p_description: description,
-        p_created_by: decoded.userId
+        p_created_by: decoded.userId.toString()
       })
 
     if (error) {
@@ -93,14 +93,14 @@ export async function POST(request: NextRequest) {
     await supabaseAdmin
       .from('admin_activity_logs')
       .insert({
-        admin_id: decoded.userId,
+        admin_id: decoded.userId.toString(),
         action: 'BACKUP_CREATED',
         details: {
           backup_id: backupId,
           backup_type: backupType,
           backup_name: backupName
         },
-        performed_by: decoded.userId,
+        performed_by: decoded.userId.toString(),
         ip_address: 'unknown',
         user_agent: 'unknown'
       })

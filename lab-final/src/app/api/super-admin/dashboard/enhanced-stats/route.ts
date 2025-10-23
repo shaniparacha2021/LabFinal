@@ -34,8 +34,9 @@ export async function GET(request: NextRequest) {
     ] = await Promise.all([
       // Admin Statistics
       supabaseAdmin
-        .from('admins')
-        .select('id, is_active, status', { count: 'exact' }),
+        .from('users')
+        .select('id, is_active, role', { count: 'exact' })
+        .eq('role', 'ADMIN'),
       
       // Subscription Statistics
       supabaseAdmin
@@ -62,8 +63,8 @@ export async function GET(request: NextRequest) {
 
     // Process admin statistics
     const totalAdmins = adminStats.count || 0
-    const activeAdmins = adminStats.data?.filter(admin => admin.is_active && admin.status === 'ACTIVE').length || 0
-    const suspendedAdmins = adminStats.data?.filter(admin => admin.status === 'SUSPENDED').length || 0
+    const activeAdmins = adminStats.data?.filter(admin => admin.is_active).length || 0
+    const suspendedAdmins = adminStats.data?.filter(admin => !admin.is_active).length || 0
 
     // Process subscription statistics
     const totalSubscriptions = subscriptionStats.count || 0

@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
       // Get login statistics
       supabaseAdmin
         .from('user_sessions')
-        .select('created_at, admin_id'),
+        .select('created_at, user_id'),
       
       // Get activity logs
       supabaseAdmin
