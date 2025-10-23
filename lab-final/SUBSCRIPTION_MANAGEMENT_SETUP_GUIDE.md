@@ -68,7 +68,7 @@ The Admin Subscription Management System provides comprehensive subscription man
 1. **Run the subscription management schema**:
    ```sql
    -- Execute in Supabase SQL Editor
-   -- File: database/admin-subscription-management.sql
+   -- File: database/admin-subscription-management-fixed.sql
    ```
 
 2. **Verify tables are created**:

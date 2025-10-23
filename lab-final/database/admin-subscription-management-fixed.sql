@@ -1,8 +1,9 @@
 -- =====================================================
--- ADMIN SUBSCRIPTION MANAGEMENT SCHEMA
+-- ADMIN SUBSCRIPTION MANAGEMENT SCHEMA (FIXED)
 -- =====================================================
 -- This file creates the complete subscription management system
 -- for admins with payment tracking, renewal reminders, and notifications
+-- FIXED: All admin_id references use TEXT to match existing admins table
 
 -- =====================================================
 -- STEP 1: CREATE ENUMS AND TYPES
@@ -464,3 +465,4 @@ SELECT '📊 Tables created: subscription_plans, admin_subscriptions, subscripti
 SELECT '🔐 RLS policies enabled for all tables' as security;
 SELECT '⚡ Functions created: create_admin_subscription, update_subscription_status, extend_subscription, check_expired_subscriptions' as functions;
 SELECT '🎯 Default subscription plans inserted: Trial, Monthly, Annual, Lifetime' as plans;
+SELECT '🔧 FIXED: All admin_id references use TEXT to match existing admins table structure' as fix;
