@@ -3,6 +3,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 import { cookies } from 'next/headers'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
+import { generateAdminAssets } from '@/lib/asset-generator'
 
 // Get all admins
 export async function GET(request: NextRequest) {
@@ -182,6 +183,36 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Generate and assign default assets
+    try {
+      const generatedAssets = await generateAdminAssets({
+        adminId: newAdmin.id,
+        adminName: newAdmin.full_name,
+        adminEmail: newAdmin.email,
+        adminPhone: newAdmin.mobile_number
+      })
+
+      // Insert generated assets into database
+      for (const asset of generatedAssets) {
+        await supabaseAdmin
+          .from('admin_assets')
+          .insert({
+            admin_id: newAdmin.id,
+            asset_type: asset.asset_type,
+            asset_name: asset.asset_name,
+            file_path: asset.file_path,
+            github_url: asset.github_url,
+            file_size: asset.file_size,
+            mime_type: asset.mime_type
+          })
+      }
+
+      console.log(`✅ Generated ${generatedAssets.length} assets for admin ${newAdmin.id}`)
+    } catch (assetError) {
+      console.error('❌ Error generating assets:', assetError)
+      // Continue with admin creation even if asset generation fails
+    }
+
     // Log activity
     await supabaseAdmin
       .from('admin_activity_logs')
@@ -191,7 +222,8 @@ export async function POST(request: NextRequest) {
         details: {
           full_name: newAdmin.full_name,
           username: newAdmin.username,
-          email: newAdmin.email
+          email: newAdmin.email,
+          assets_generated: true
         },
         performed_by: decoded.userId,
         ip_address: 'unknown',
@@ -202,7 +234,7 @@ export async function POST(request: NextRequest) {
     const { password_hash: _, ...safeAdmin } = newAdmin
 
     return NextResponse.json({
-      message: 'Admin created successfully',
+      message: 'Admin created successfully with default assets',
       admin: safeAdmin
     }, { status: 201 })
 

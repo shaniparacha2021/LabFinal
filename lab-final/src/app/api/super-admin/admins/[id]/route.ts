@@ -3,6 +3,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 import { cookies } from 'next/headers'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
+import { deleteAdminAssets } from '@/lib/asset-generator'
 
 // Get specific admin
 export async function GET(
@@ -250,6 +251,15 @@ export async function DELETE(
         { message: 'Admin not found' },
         { status: 404 }
       )
+    }
+
+    // Delete admin assets from filesystem
+    try {
+      await deleteAdminAssets(params.id)
+      console.log(`✅ Deleted assets for admin ${params.id}`)
+    } catch (assetError) {
+      console.error('❌ Error deleting admin assets:', assetError)
+      // Continue with admin deletion even if asset deletion fails
     }
 
     // Delete admin (cascade will delete related assets and logs)

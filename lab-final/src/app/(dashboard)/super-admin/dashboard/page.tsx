@@ -16,7 +16,9 @@ import {
   LogOut,
   Settings,
   BarChart3,
-  AlertTriangle
+  AlertTriangle,
+  UserPlus,
+  Image
 } from 'lucide-react'
 
 interface DashboardStats {
@@ -138,6 +140,10 @@ export default function SuperAdminDashboard() {
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-600">Welcome, {user?.name}</span>
+              <Button variant="default" size="sm" onClick={() => router.push('/super-admin/admin-management')}>
+                <UserPlus className="h-4 w-4 mr-2" />
+                Admin Management
+              </Button>
               <Button variant="outline" size="sm" onClick={() => router.push('/super-admin/settings')}>
                 <Settings className="h-4 w-4 mr-2" />
                 Settings
