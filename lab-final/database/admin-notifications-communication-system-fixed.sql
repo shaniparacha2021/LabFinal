@@ -446,8 +446,8 @@ DROP FUNCTION IF EXISTS suspend_admin_account(TEXT, TEXT, TEXT, TEXT);
 CREATE OR REPLACE FUNCTION suspend_admin_account(
     p_admin_id TEXT,
     p_suspension_reason TEXT,
-    p_suspension_notes TEXT DEFAULT NULL,
-    p_suspended_by TEXT
+    p_suspended_by TEXT,
+    p_suspension_notes TEXT DEFAULT NULL
 ) RETURNS BOOLEAN AS $$
 DECLARE
     v_previous_status account_status;

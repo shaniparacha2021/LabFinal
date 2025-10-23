@@ -42,8 +42,8 @@ export async function POST(
       .rpc('suspend_admin_account', {
         p_admin_id: params.id,
         p_suspension_reason: suspensionReason,
-        p_suspension_notes: suspensionNotes,
-        p_suspended_by: decoded.userId
+        p_suspended_by: decoded.userId,
+        p_suspension_notes: suspensionNotes
       })
 
     if (error) {
