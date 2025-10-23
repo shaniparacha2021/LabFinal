@@ -27,10 +27,13 @@ function SuperAdminVerifyContent() {
   }, [searchParams])
 
   useEffect(() => {
+    console.log('🔍 Verification page - email param:', email)
     if (!email) {
+      console.log('❌ No email parameter, redirecting to login')
       router.push('/super-admin/login')
       return
     }
+    console.log('✅ Email parameter found:', email)
 
     // Start countdown for resend button
     setCountdown(60)
