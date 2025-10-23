@@ -1,0 +1,91 @@
+{
+  "sample_assets": {
+    "lab_1": {
+      "admin_id": "admin-lab-1",
+      "admin_name": "Lab 1 Administrator",
+      "assets": {
+        "header_image": {
+          "asset_name": "Lab 1 Header - Research & Development",
+          "file_path": "assets/images/headers/sample-header-lab-1.svg",
+          "github_url": "https://github.com/shaniparacha2021/LabFinal/blob/main/assets/images/headers/sample-header-lab-1.svg",
+          "file_size": 2847,
+          "mime_type": "image/svg+xml",
+          "description": "Blue gradient header for Lab 1 R&D department"
+        },
+        "footer_image": {
+          "asset_name": "Lab 1 Footer - Research & Development",
+          "file_path": "assets/images/footers/sample-footer-lab-1.svg",
+          "github_url": "https://github.com/shaniparacha2021/LabFinal/blob/main/assets/images/footers/sample-footer-lab-1.svg",
+          "file_size": 2156,
+          "mime_type": "image/svg+xml",
+          "description": "Gray gradient footer for Lab 1 R&D department"
+        },
+        "watermark_image": {
+          "asset_name": "Lab 1 Watermark - Research & Development",
+          "file_path": "assets/images/watermarks/sample-watermark-lab-1.svg",
+          "github_url": "https://github.com/shaniparacha2021/LabFinal/blob/main/assets/images/watermarks/sample-watermark-lab-1.svg",
+          "file_size": 1892,
+          "mime_type": "image/svg+xml",
+          "description": "Blue watermark for Lab 1 R&D documents"
+        }
+      }
+    },
+    "lab_2": {
+      "admin_id": "admin-lab-2",
+      "admin_name": "Lab 2 Administrator",
+      "assets": {
+        "header_image": {
+          "asset_name": "Lab 2 Header - Quality Assurance",
+          "file_path": "assets/images/headers/sample-header-lab-2.svg",
+          "github_url": "https://github.com/shaniparacha2021/LabFinal/blob/main/assets/images/headers/sample-header-lab-2.svg",
+          "file_size": 2847,
+          "mime_type": "image/svg+xml",
+          "description": "Green gradient header for Lab 2 QA department"
+        },
+        "footer_image": {
+          "asset_name": "Lab 2 Footer - Quality Assurance",
+          "file_path": "assets/images/footers/sample-footer-lab-2.svg",
+          "github_url": "https://github.com/shaniparacha2021/LabFinal/blob/main/assets/images/footers/sample-footer-lab-2.svg",
+          "file_size": 2156,
+          "mime_type": "image/svg+xml",
+          "description": "Purple gradient footer for Lab 2 QA department"
+        },
+        "watermark_image": {
+          "asset_name": "Lab 2 Watermark - Quality Assurance",
+          "file_path": "assets/images/watermarks/sample-watermark-lab-2.svg",
+          "github_url": "https://github.com/shaniparacha2021/LabFinal/blob/main/assets/images/watermarks/sample-watermark-lab-2.svg",
+          "file_size": 1892,
+          "mime_type": "image/svg+xml",
+          "description": "Green watermark for Lab 2 QA documents"
+        }
+      }
+    }
+  },
+  "asset_guidelines": {
+    "file_formats": {
+      "headers": ["svg", "png", "jpg", "jpeg"],
+      "footers": ["svg", "png", "jpg", "jpeg"],
+      "watermarks": ["svg", "png"]
+    },
+    "recommended_sizes": {
+      "headers": "1200x200px",
+      "footers": "1200x150px",
+      "watermarks": "200x200px"
+    },
+    "max_file_sizes": {
+      "headers": "2MB",
+      "footers": "2MB",
+      "watermarks": "1MB"
+    },
+    "naming_conventions": {
+      "headers": "header-lab-[admin-id]-[version].[ext]",
+      "footers": "footer-lab-[admin-id]-[version].[ext]",
+      "watermarks": "watermark-lab-[admin-id]-[version].[ext]"
+    }
+  },
+  "github_integration": {
+    "base_url": "https://github.com/shaniparacha2021/LabFinal/blob/main/",
+    "raw_url": "https://raw.githubusercontent.com/shaniparacha2021/LabFinal/main/",
+    "path_structure": "assets/images/[type]/[filename]"
+  }
+}
