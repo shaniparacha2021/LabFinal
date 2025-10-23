@@ -62,7 +62,8 @@ export default function AnnouncementForm({
         notificationType: announcement.notification_type || 'BANNER',
         targetAudience: announcement.target_audience || ['ALL'],
         status: announcement.status || 'DRAFT',
-        broadcastImmediately: false
+        broadcastImmediately: false,
+        generateBanner: false
       })
     }
   }, [announcement, mode])
@@ -210,15 +211,36 @@ export default function AnnouncementForm({
           <div className="space-y-4">
             <h3 className="text-lg font-medium">Media and Links</h3>
             
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="generateBanner"
+                  checked={formData.generateBanner}
+                  onCheckedChange={(checked) => setFormData({ ...formData, generateBanner: checked })}
+                />
+                <Label htmlFor="generateBanner" className="flex items-center space-x-1">
+                  <Image className="h-4 w-4 text-blue-500" />
+                  <span>Generate Banner Image</span>
+                </Label>
+              </div>
+              <p className="text-sm text-gray-500 ml-6">
+                Automatically generate a banner image and save it to GitHub repository
+              </p>
+            </div>
+            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="imageUrl">Image URL</Label>
+                <Label htmlFor="imageUrl">Custom Image URL (Optional)</Label>
                 <Input
                   id="imageUrl"
                   value={formData.imageUrl}
                   onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
                   placeholder="https://example.com/image.jpg"
+                  disabled={formData.generateBanner}
                 />
+                {formData.generateBanner && (
+                  <p className="text-xs text-gray-500">Custom image disabled when banner generation is enabled</p>
+                )}
               </div>
 
               <div className="space-y-2">

@@ -1,8 +1,9 @@
 -- =====================================================
--- ADMIN ANNOUNCEMENTS & BROADCASTS MANAGEMENT SCHEMA
+-- ADMIN ANNOUNCEMENTS & BROADCASTS MANAGEMENT SCHEMA (FIXED)
 -- =====================================================
 -- This file creates the complete announcements and broadcasts system
 -- for Super Admin to broadcast system-wide announcements to all Admin dashboards
+-- FIXED: Removed foreign key constraints to avoid "system" user reference errors
 
 -- =====================================================
 -- STEP 1: CREATE ENUMS AND TYPES
@@ -55,8 +56,8 @@ CREATE TABLE IF NOT EXISTS announcements (
     target_audience TEXT[] DEFAULT ARRAY['ALL'], -- ['ALL', 'SUPER_ADMIN', 'ADMIN', 'TENANT_ADMIN']
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    created_by TEXT,
-    updated_by TEXT
+    created_by TEXT, -- FIXED: Removed foreign key constraint
+    updated_by TEXT  -- FIXED: Removed foreign key constraint
 );
 
 -- =====================================================
@@ -106,7 +107,7 @@ CREATE TABLE IF NOT EXISTS announcement_broadcasts (
     status VARCHAR(50) NOT NULL DEFAULT 'PENDING', -- PENDING, IN_PROGRESS, COMPLETED, FAILED
     error_message TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    created_by TEXT
+    created_by TEXT -- FIXED: Removed foreign key constraint
 );
 
 -- =====================================================
@@ -334,6 +335,8 @@ CREATE OR REPLACE FUNCTION get_active_announcements_for_admin(
     description TEXT,
     announcement_type announcement_type,
     image_url VARCHAR(500),
+    banner_file_name VARCHAR(255),
+    banner_github_path VARCHAR(500),
     link_url VARCHAR(500),
     link_text VARCHAR(100),
     is_urgent BOOLEAN,
@@ -352,6 +355,8 @@ BEGIN
         a.description,
         a.announcement_type,
         a.image_url,
+        a.banner_file_name,
+        a.banner_github_path,
         a.link_url,
         a.link_text,
         a.is_urgent,
@@ -459,5 +464,6 @@ SELECT '📊 Tables created: announcements, announcement_views, announcement_not
 SELECT '🔐 RLS policies enabled for all tables (using "Allow all access for now" - same as existing system)' as security;
 SELECT '⚡ Functions created: create_announcement, broadcast_announcement, mark_announcement_viewed, dismiss_announcement, get_active_announcements_for_admin, check_expired_announcements' as functions;
 SELECT '🎯 Sample announcements inserted: Welcome, Maintenance Alert, New Feature Release' as samples;
-SELECT '🔧 FIXED: All admin_id references use TEXT to match existing admins table structure' as fix;
+SELECT '🔧 FIXED: Removed foreign key constraints to avoid "system" user reference errors' as fix;
 SELECT '🔧 FIXED: RLS policies use simple "Allow all access" to avoid auth.uid() type conflicts' as rls_fix;
+SELECT '🎨 NEW: Added banner generation and GitHub storage support' as banner_feature;

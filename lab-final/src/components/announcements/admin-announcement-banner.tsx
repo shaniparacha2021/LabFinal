@@ -21,6 +21,8 @@ interface Announcement {
   description: string
   announcement_type: 'SYSTEM_UPDATES' | 'MAINTENANCE_ALERTS' | 'NEW_FEATURE_RELEASES' | 'SUBSCRIPTION_OFFERS' | 'GENERAL_NOTICES'
   image_url?: string
+  banner_file_name?: string
+  banner_github_path?: string
   link_url?: string
   link_text?: string
   is_urgent: boolean
@@ -171,10 +173,10 @@ export default function AdminAnnouncementBanner({
                 
                 <p className="text-gray-700 mb-3">{announcement.description}</p>
                 
-                {announcement.image_url && (
+                {(announcement.image_url || announcement.banner_github_path) && (
                   <div className="mb-3">
                     <img 
-                      src={announcement.image_url} 
+                      src={announcement.banner_github_path || announcement.image_url} 
                       alt={announcement.title}
                       className="max-w-full h-auto rounded-lg"
                     />

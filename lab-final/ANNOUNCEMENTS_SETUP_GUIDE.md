@@ -11,15 +11,20 @@ The Admin Announcements & Broadcasts Management System allows Super Admins to cr
 Execute the following SQL script in your Supabase SQL Editor:
 
 ```sql
--- File: database/admin-announcements-management.sql
+-- File: database/admin-announcements-management-fixed.sql
 -- This creates all necessary tables, functions, and sample data
+-- FIXED: Removed foreign key constraints to avoid "system" user reference errors
 ```
 
 **Tables Created:**
-- `announcements` - Main announcements table
+- `announcements` - Main announcements table with banner storage fields
 - `announcement_views` - Track announcement views by admins
 - `announcement_notifications` - Manage notification delivery
 - `announcement_broadcasts` - Track broadcast history
+
+**New Banner Storage Fields:**
+- `banner_file_name` - Name of the generated banner file
+- `banner_github_path` - GitHub path to the banner image
 
 **Functions Created:**
 - `create_announcement()` - Create new announcements
@@ -103,6 +108,51 @@ Execute the following SQL script in your Supabase SQL Editor:
   - Multi-announcement support
   - View and dismiss functionality
   - Automatic refresh
+
+## 🎨 **BANNER GENERATION & STORAGE**
+
+### **Automatic Banner Generation**
+
+The system now supports automatic banner generation and GitHub storage:
+
+#### **Banner Generator Features:**
+- **SVG Generation:** Creates beautiful SVG banners with dynamic content
+- **Type-based Styling:** Different colors and icons for each announcement type
+- **Priority Indicators:** Visual indicators for urgent and pinned announcements
+- **GitHub Storage:** Automatically saves banners to GitHub repository
+- **Responsive Design:** Banners adapt to different sizes and contexts
+
+#### **Banner Types & Colors:**
+- **System Updates:** Blue theme with 🔧 icon
+- **Maintenance Alerts:** Orange theme with ⚠️ icon  
+- **New Feature Releases:** Green theme with ✨ icon
+- **Subscription Offers:** Purple theme with 💎 icon
+- **General Notices:** Gray theme with 📢 icon
+
+#### **GitHub Storage Structure:**
+```
+assets/
+└── images/
+    └── announcements/
+        └── banners/
+            ├── announcement-banner-{id}-{type}-{date}.svg
+            └── ...
+```
+
+#### **Environment Variables Required:**
+```env
+GITHUB_TOKEN=your_github_token
+GITHUB_REPO_OWNER=shaniparacha2021
+GITHUB_REPO_NAME=LabFinal
+GITHUB_BRANCH=main
+```
+
+#### **Banner Generation Process:**
+1. User enables "Generate Banner Image" in announcement form
+2. System creates SVG banner with announcement details
+3. Banner is saved to GitHub repository
+4. GitHub path is stored in database
+5. Banner is displayed in admin notifications
 
 ## 🔧 **INTEGRATION**
 

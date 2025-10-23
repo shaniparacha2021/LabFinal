@@ -123,6 +123,8 @@ export async function GET(request: NextRequest) {
           p_title: 'Test Announcement',
           p_description: 'This is a test announcement for system verification',
           p_announcement_type: 'GENERAL_NOTICES',
+          p_banner_file_name: 'test-banner.svg',
+          p_banner_github_path: 'https://github.com/test/banner.svg',
           p_created_by: 'test-user'
         })
       

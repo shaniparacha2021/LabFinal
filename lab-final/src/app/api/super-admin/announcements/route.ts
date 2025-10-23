@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import jwt from 'jsonwebtoken'
 import { supabaseAdmin } from '@/lib/supabase'
+import { BannerStorageService } from '@/lib/banner-storage-service'
+import { BannerConfig } from '@/lib/banner-generator'
 
 // GET /api/super-admin/announcements - List all announcements
 export async function GET(request: NextRequest) {
@@ -153,7 +155,8 @@ export async function POST(request: NextRequest) {
       notificationType = 'BANNER',
       targetAudience = ['ALL'],
       status = 'DRAFT',
-      broadcastImmediately = false
+      broadcastImmediately = false,
+      generateBanner = false
     } = await request.json()
 
     if (!title || !announcementType) {
@@ -163,6 +166,35 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Generate banner if requested
+    let bannerFileName = null
+    let bannerGithubPath = null
+    
+    if (generateBanner) {
+      try {
+        const bannerService = BannerStorageService.getInstance()
+        await bannerService.createBannerDirectory()
+        
+        const bannerConfig: BannerConfig = {
+          title,
+          description,
+          type: announcementType,
+          isUrgent,
+          isPinned
+        }
+        
+        const bannerResult = await bannerService.saveBannerToGitHub('temp-id', bannerConfig)
+        
+        if (bannerResult.success && bannerResult.fileName) {
+          bannerFileName = bannerResult.fileName
+          bannerGithubPath = bannerResult.githubPath
+        }
+      } catch (error) {
+        console.error('Banner generation error:', error)
+        // Continue without banner if generation fails
+      }
+    }
+
     // Create announcement using database function
     const { data: announcementId, error: createError } = await supabaseAdmin
       .rpc('create_announcement', {
@@ -170,6 +202,8 @@ export async function POST(request: NextRequest) {
         p_description: description,
         p_announcement_type: announcementType,
         p_image_url: imageUrl,
+        p_banner_file_name: bannerFileName,
+        p_banner_github_path: bannerGithubPath,
         p_link_url: linkUrl,
         p_link_text: linkText,
         p_visibility_start_date: visibilityStartDate || new Date().toISOString(),
