@@ -3,7 +3,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 import { cookies } from 'next/headers'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
-import { generateAdminAssets } from '@/lib/asset-generator'
+import { generateAdminAssets } from '@/lib/asset-generator-simple'
 
 // Get all admins
 export async function GET(request: NextRequest) {
