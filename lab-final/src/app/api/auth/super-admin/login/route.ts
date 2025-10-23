@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabase, supabaseAdmin } from '@/lib/supabase'
 import bcrypt from 'bcryptjs'
 import { generateVerificationCode, sendVerificationEmail } from '@/lib/email-service'
 
@@ -14,8 +14,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if user exists and is Super Admin
-    const { data: user, error: userError } = await supabase
+    // Check if user exists and is Super Admin (using admin client to bypass RLS)
+    const { data: user, error: userError } = await supabaseAdmin
       .from('users')
       .select('*')
       .eq('email', email)
@@ -36,8 +36,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if account is locked
-    const { data: lockout } = await supabase
+    // Check if account is locked (using admin client)
+    const { data: lockout } = await supabaseAdmin
       .from('account_lockouts')
       .select('*')
       .eq('user_id', user.id)
@@ -82,8 +82,8 @@ export async function POST(request: NextRequest) {
     const verificationCode = generateVerificationCode()
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000) // 5 minutes
 
-    // Store verification code
-    const { error: codeError } = await supabase
+    // Store verification code (using admin client)
+    const { error: codeError } = await supabaseAdmin
       .from('verification_codes')
       .insert({
         user_id: user.id,
@@ -109,8 +109,8 @@ export async function POST(request: NextRequest) {
       // Don't fail the request if email fails, just log it
     }
 
-    // Clear any existing lockouts
-    await supabase
+    // Clear any existing lockouts (using admin client)
+    await supabaseAdmin
       .from('account_lockouts')
       .update({ is_active: false })
       .eq('user_id', user.id)
@@ -134,8 +134,8 @@ export async function POST(request: NextRequest) {
 
 async function logFailedAttempt(userId: string | null, email: string, reason: string) {
   try {
-    // Get current failed attempts in last 15 minutes
-    const { data: attempts } = await supabase
+    // Get current failed attempts in last 15 minutes (using admin client)
+    const { data: attempts } = await supabaseAdmin
       .from('login_attempts')
       .select('*')
       .eq('email', email)
@@ -144,8 +144,8 @@ async function logFailedAttempt(userId: string | null, email: string, reason: st
 
     const recentAttempts = attempts?.length || 0
 
-    // Log this attempt
-    await supabase
+    // Log this attempt (using admin client)
+    await supabaseAdmin
       .from('login_attempts')
       .insert({
         user_id: userId,
@@ -155,10 +155,10 @@ async function logFailedAttempt(userId: string | null, email: string, reason: st
         user_agent: 'unknown'
       })
 
-    // If 5 or more failed attempts, lock the account
+    // If 5 or more failed attempts, lock the account (using admin client)
     if (recentAttempts >= 4) { // 4 previous + this one = 5 total
       if (userId) {
-        await supabase
+        await supabaseAdmin
           .from('account_lockouts')
           .insert({
             user_id: userId,
@@ -175,7 +175,7 @@ async function logFailedAttempt(userId: string | null, email: string, reason: st
 
 async function logActivity(userId: string, email: string, action: string) {
   try {
-    await supabase
+    await supabaseAdmin
       .from('activity_logs')
       .insert({
         user_id: userId,
