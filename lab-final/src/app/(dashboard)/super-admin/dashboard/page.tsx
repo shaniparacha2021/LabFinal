@@ -19,7 +19,8 @@ import {
   AlertTriangle,
   UserPlus,
   CreditCard,
-  Image
+  Image,
+  Megaphone
 } from 'lucide-react'
 
 interface DashboardStats {
@@ -148,6 +149,10 @@ export default function SuperAdminDashboard() {
               <Button variant="default" size="sm" onClick={() => router.push('/super-admin/subscription-management')}>
                 <CreditCard className="h-4 w-4 mr-2" />
                 Subscriptions
+              </Button>
+              <Button variant="default" size="sm" onClick={() => router.push('/super-admin/announcements')}>
+                <Megaphone className="h-4 w-4 mr-2" />
+                Announcements
               </Button>
               <Button variant="outline" size="sm" onClick={() => router.push('/super-admin/settings')}>
                 <Settings className="h-4 w-4 mr-2" />
