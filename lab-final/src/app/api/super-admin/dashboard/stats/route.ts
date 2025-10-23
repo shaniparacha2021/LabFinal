@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     const { data: user, error: userError } = await supabaseAdmin
       .from('users')
       .select('role')
-      .eq('id', decoded.userId)
+      .eq('id', decoded.userId.toString())
       .eq('role', 'SUPER_ADMIN')
       .single()
 

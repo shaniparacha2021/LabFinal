@@ -309,7 +309,7 @@ CREATE POLICY "Super Admin can manage all backups" ON backup_history
     FOR ALL USING (
         EXISTS (
             SELECT 1 FROM users 
-            WHERE users.id = auth.uid() 
+            WHERE users.id = auth.uid()::text 
             AND users.role = 'SUPER_ADMIN'
         )
     );
@@ -318,7 +318,7 @@ CREATE POLICY "Super Admin can manage all restores" ON restore_history
     FOR ALL USING (
         EXISTS (
             SELECT 1 FROM users 
-            WHERE users.id = auth.uid() 
+            WHERE users.id = auth.uid()::text 
             AND users.role = 'SUPER_ADMIN'
         )
     );
