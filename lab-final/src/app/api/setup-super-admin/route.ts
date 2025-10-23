@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabase, supabaseAdmin } from '@/lib/supabase'
 import bcrypt from 'bcryptjs'
 
 export async function POST(request: NextRequest) {
@@ -10,8 +10,8 @@ export async function POST(request: NextRequest) {
     const hashedPassword = await bcrypt.hash('admin123', 10)
     console.log('✅ Password hashed successfully')
     
-    // First, check if user already exists
-    const { data: existingUser } = await supabase
+    // First, check if user already exists using admin client to bypass RLS
+    const { data: existingUser } = await supabaseAdmin
       .from('users')
       .select('*')
       .eq('email', 'shaniparacha2021@gmail.com')
@@ -20,8 +20,8 @@ export async function POST(request: NextRequest) {
     if (existingUser) {
       console.log('👤 User already exists, updating password...')
       
-      // Update existing user
-      const { data: user, error: updateError } = await supabase
+      // Update existing user using admin client
+      const { data: user, error: updateError } = await supabaseAdmin
         .from('users')
         .update({
           password_hash: hashedPassword,
@@ -46,8 +46,8 @@ export async function POST(request: NextRequest) {
     } else {
       console.log('👤 Creating new Super Admin user...')
       
-      // Create new user
-      const { data: user, error: createError } = await supabase
+      // Create new user using admin client
+      const { data: user, error: createError } = await supabaseAdmin
         .from('users')
         .insert({
           id: 'super-admin-user',
@@ -78,8 +78,8 @@ export async function POST(request: NextRequest) {
     const testPassword = await bcrypt.compare('admin123', hashedPassword)
     console.log('🔐 Password verification test:', testPassword)
 
-    // Test database query (same as login API)
-    const { data: testUser, error: testError } = await supabase
+    // Test database query (same as login API) using admin client
+    const { data: testUser, error: testError } = await supabaseAdmin
       .from('users')
       .select('*')
       .eq('email', 'shaniparacha2021@gmail.com')
@@ -132,8 +132,8 @@ export async function GET(request: NextRequest) {
   try {
     console.log('🔍 Checking Super Admin user status...')
     
-    // Check if user exists
-    const { data: user, error } = await supabase
+    // Check if user exists using admin client
+    const { data: user, error } = await supabaseAdmin
       .from('users')
       .select('*')
       .eq('email', 'shaniparacha2021@gmail.com')
@@ -156,8 +156,8 @@ export async function GET(request: NextRequest) {
       }, { status: 404 })
     }
 
-    // Test the exact query used by login API
-    const { data: loginTestUser, error: loginTestError } = await supabase
+    // Test the exact query used by login API using admin client
+    const { data: loginTestUser, error: loginTestError } = await supabaseAdmin
       .from('users')
       .select('*')
       .eq('email', 'shaniparacha2021@gmail.com')
