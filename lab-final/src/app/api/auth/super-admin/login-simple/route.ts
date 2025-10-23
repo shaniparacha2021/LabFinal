@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    response.cookies.set('auth-token', token, {
+    response.cookies.set('super-admin-token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',

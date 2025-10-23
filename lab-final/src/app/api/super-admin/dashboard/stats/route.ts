@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabase, supabaseAdmin } from '@/lib/supabase'
 import { cookies } from 'next/headers'
 import jwt from 'jsonwebtoken'
 
@@ -17,8 +17,8 @@ export async function GET(request: NextRequest) {
 
     const decoded = jwt.verify(token, process.env.NEXTAUTH_SECRET || 'fallback-secret') as any
 
-    // Verify user is Super Admin
-    const { data: user, error: userError } = await supabase
+    // Verify user is Super Admin (using admin client to bypass RLS)
+    const { data: user, error: userError } = await supabaseAdmin
       .from('users')
       .select('role')
       .eq('id', decoded.userId)

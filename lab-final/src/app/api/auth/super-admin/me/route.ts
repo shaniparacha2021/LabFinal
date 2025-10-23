@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
-import { supabase } from '@/lib/supabase'
+import { supabase, supabaseAdmin } from '@/lib/supabase'
 import jwt from 'jsonwebtoken'
 
 export async function GET(request: NextRequest) {
@@ -18,8 +18,8 @@ export async function GET(request: NextRequest) {
     // Verify JWT token
     const decoded = jwt.verify(token, process.env.NEXTAUTH_SECRET || 'fallback-secret') as any
 
-    // Get user details from database
-    const { data: user, error: userError } = await supabase
+    // Get user details from database (using admin client to bypass RLS)
+    const { data: user, error: userError } = await supabaseAdmin
       .from('users')
       .select('id, email, name, role, is_active, created_at, updated_at')
       .eq('id', decoded.userId)
