@@ -27,8 +27,7 @@
       "@/*": [
         "./src/*"
       ]
-    },
-    "types": ["node", "estree"]
+    }
   },
   "include": [
     "next-env.d.ts",
