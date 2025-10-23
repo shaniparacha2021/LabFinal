@@ -121,7 +121,7 @@ export async function POST(request: NextRequest) {
       .eq('user_id', user.id)
       .lt('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
 
-    // Log successful verification (using admin client)
+    // Log successful verification
     await supabaseAdmin
       .from('activity_logs')
       .insert({
