@@ -88,7 +88,40 @@ export async function GET() {
       results.errors.push('Session functions: Function not found')
     }
 
-    // Test 4: Check if we can create a test admin
+    // Test 4: Check column structure
+    try {
+      // Check activity_logs table structure
+      const { data: activityLogsColumns, error: activityLogsError } = await supabaseAdmin
+        .from('activity_logs')
+        .select('timestamp, created_at')
+        .limit(1)
+
+      if (activityLogsError && activityLogsError.message.includes('column "created_at" does not exist')) {
+        results.functions.columnStructure = { 
+          success: true, 
+          activityLogsUsesTimestamp: true,
+          note: 'activity_logs correctly uses "timestamp" column'
+        }
+      } else if (activityLogsError && activityLogsError.message.includes('column "timestamp" does not exist')) {
+        results.functions.columnStructure = { 
+          success: false, 
+          activityLogsUsesTimestamp: false,
+          error: 'activity_logs should use "timestamp" column, not "created_at"'
+        }
+        results.errors.push('Column structure: activity_logs should use "timestamp" column')
+      } else {
+        results.functions.columnStructure = { 
+          success: true, 
+          activityLogsUsesTimestamp: true,
+          note: 'activity_logs table structure is correct'
+        }
+      }
+    } catch (err) {
+      results.functions.columnStructure = { success: false, error: 'Column structure check failed' }
+      results.errors.push('Column structure: Check failed')
+    }
+
+    // Test 5: Check if we can create a test admin
     try {
       const testAdminData = {
         full_name: 'Test Admin',

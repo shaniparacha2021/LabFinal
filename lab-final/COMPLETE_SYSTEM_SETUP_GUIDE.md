@@ -9,14 +9,17 @@ The error `relation "admins" does not exist` occurs because the database schema 
 
 1. **Go to your Supabase Dashboard**
 2. **Navigate to SQL Editor**
-3. **Run the complete setup script:**
+3. **Run the CORRECTED setup script:**
 
 ```sql
 -- Copy and paste the entire content of:
--- database/complete-system-setup.sql
+-- database/corrected-system-setup.sql
 ```
 
-**This script will:**
+**⚠️ IMPORTANT:** Use the CORRECTED script, not the original one!
+
+**This CORRECTED script will:**
+- ✅ **Fix Column Issues**: Uses correct column names (`timestamp` for `activity_logs`, `created_at` for `admin_activity_logs`)
 - ✅ Create all required tables (`users`, `admins`, `admin_sessions`, etc.)
 - ✅ Set up all indexes for performance
 - ✅ Enable Row Level Security (RLS)
@@ -24,6 +27,7 @@ The error `relation "admins" does not exist` occurs because the database schema 
 - ✅ Set up triggers for automatic cleanup
 - ✅ Create the Super Admin user
 - ✅ Verify everything is working
+- ✅ **Resolve "column does not exist" errors**
 
 ### **Step 2: Verify Database Setup**
 
