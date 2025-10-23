@@ -189,6 +189,9 @@ CREATE POLICY "Allow all access for now" ON announcement_broadcasts
 -- =====================================================
 
 -- Function to create announcement
+-- Drop existing function first to avoid conflicts
+DROP FUNCTION IF EXISTS create_announcement(VARCHAR, TEXT, announcement_type, VARCHAR, VARCHAR, VARCHAR, VARCHAR, VARCHAR, TIMESTAMP WITH TIME ZONE, TIMESTAMP WITH TIME ZONE, BOOLEAN, BOOLEAN, notification_type, TEXT[], TEXT);
+
 CREATE OR REPLACE FUNCTION create_announcement(
     p_title VARCHAR(255),
     p_description TEXT,
@@ -225,6 +228,9 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Function to broadcast announcement
+-- Drop existing function first to avoid conflicts
+DROP FUNCTION IF EXISTS broadcast_announcement(UUID, VARCHAR, TIMESTAMP WITH TIME ZONE, TEXT);
+
 CREATE OR REPLACE FUNCTION broadcast_announcement(
     p_announcement_id UUID,
     p_broadcast_type VARCHAR(50) DEFAULT 'IMMEDIATE',
@@ -284,6 +290,9 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Function to mark announcement as viewed
+-- Drop existing function first to avoid conflicts
+DROP FUNCTION IF EXISTS mark_announcement_viewed(UUID, TEXT, notification_type);
+
 CREATE OR REPLACE FUNCTION mark_announcement_viewed(
     p_announcement_id UUID,
     p_admin_id TEXT,
@@ -313,6 +322,9 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Function to dismiss announcement
+-- Drop existing function first to avoid conflicts
+DROP FUNCTION IF EXISTS dismiss_announcement(UUID, TEXT, notification_type);
+
 CREATE OR REPLACE FUNCTION dismiss_announcement(
     p_announcement_id UUID,
     p_admin_id TEXT,
@@ -338,6 +350,9 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Function to get active announcements for admin
+-- Drop existing function first to avoid return type conflicts
+DROP FUNCTION IF EXISTS get_active_announcements_for_admin(TEXT);
+
 CREATE OR REPLACE FUNCTION get_active_announcements_for_admin(
     p_admin_id TEXT
 ) RETURNS TABLE (
@@ -384,6 +399,9 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Function to check and update expired announcements
+-- Drop existing function first to avoid conflicts
+DROP FUNCTION IF EXISTS check_expired_announcements();
+
 CREATE OR REPLACE FUNCTION check_expired_announcements() RETURNS INTEGER AS $$
 DECLARE
     v_count INTEGER := 0;
@@ -474,3 +492,4 @@ SELECT '🎯 Sample announcements inserted: Welcome, Maintenance Alert, New Feat
 SELECT '🔧 FIXED: All admin_id references use TEXT to match existing admins table structure' as fix;
 SELECT '🔧 FIXED: RLS policies use simple "Allow all access" to avoid auth.uid() type conflicts' as rls_fix;
 SELECT '🔧 FIXED: Type creation uses safe DO blocks to avoid conflicts with existing types' as type_fix;
+SELECT '🔧 FIXED: Function creation uses DROP FUNCTION IF EXISTS to avoid return type conflicts' as function_fix;
