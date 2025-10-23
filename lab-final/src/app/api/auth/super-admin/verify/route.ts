@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabase, supabaseAdmin } from '@/lib/supabase'
 import { cookies } from 'next/headers'
 import jwt from 'jsonwebtoken'
 
@@ -14,8 +14,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Find the verification code
-    const { data: verificationCode, error: codeError } = await supabase
+    // Find the verification code (using admin client to bypass RLS)
+    const { data: verificationCode, error: codeError } = await supabaseAdmin
       .from('verification_codes')
       .select('*')
       .eq('email', email)
@@ -40,8 +40,8 @@ export async function POST(request: NextRequest) {
     const expiresAt = new Date(verificationCode.expires_at)
     
     if (now > expiresAt) {
-      // Mark as used to prevent reuse
-      await supabase
+      // Mark as used to prevent reuse (using admin client)
+      await supabaseAdmin
         .from('verification_codes')
         .update({ is_used: true })
         .eq('id', verificationCode.id)
@@ -55,14 +55,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Mark code as used
-    await supabase
+    // Mark code as used (using admin client)
+    await supabaseAdmin
       .from('verification_codes')
       .update({ is_used: true, used_at: now.toISOString() })
       .eq('id', verificationCode.id)
 
-    // Get user details
-    const { data: user, error: userError } = await supabase
+    // Get user details (using admin client to bypass RLS)
+    const { data: user, error: userError } = await supabaseAdmin
       .from('users')
       .select('*')
       .eq('id', verificationCode.user_id)
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
       { expiresIn: '24h' }
     )
 
-    await supabase
+    await supabaseAdmin
       .from('user_sessions')
       .insert({
         user_id: user.id,
@@ -114,15 +114,15 @@ export async function POST(request: NextRequest) {
         user_agent: 'unknown'
       })
 
-    // Clean up old verification codes for this user
-    await supabase
+    // Clean up old verification codes for this user (using admin client)
+    await supabaseAdmin
       .from('verification_codes')
       .delete()
       .eq('user_id', user.id)
       .lt('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
 
-    // Log successful verification
-    await supabase
+    // Log successful verification (using admin client)
+    await supabaseAdmin
       .from('activity_logs')
       .insert({
         user_id: user.id,
