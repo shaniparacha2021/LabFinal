@@ -52,7 +52,7 @@ AND success = false;
 -- Final verification - check all authentication-related data
 SELECT 'User Status' as check_type, 
        email, 
-       role, 
+       role::text, 
        is_active,
        CASE 
            WHEN password_hash IS NOT NULL THEN 'Has password hash'
@@ -69,7 +69,7 @@ SELECT 'Lockout Status' as check_type,
            WHEN COUNT(*) > 0 THEN 'Has active lockouts'
            ELSE 'No active lockouts'
        END as role,
-       'N/A' as is_active,
+       false as is_active,
        'N/A' as password_status
 FROM account_lockouts 
 WHERE user_id = 'super-admin-user' 
@@ -80,7 +80,7 @@ UNION ALL
 SELECT 'Recent Failed Attempts' as check_type,
        'shaniparacha2021@gmail.com' as email,
        COUNT(*)::text as role,
-       'N/A' as is_active,
+       false as is_active,
        'N/A' as password_status
 FROM login_attempts 
 WHERE email = 'shaniparacha2021@gmail.com' 
