@@ -429,9 +429,7 @@ $$ LANGUAGE plpgsql;
 -- =====================================================
 
 -- Trigger to update updated_at timestamp
--- Drop existing function first to avoid conflicts
-DROP FUNCTION IF EXISTS update_updated_at_column();
-
+-- Note: Using CREATE OR REPLACE to avoid dropping function used by other triggers
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -505,4 +503,5 @@ SELECT '🔧 FIXED: RLS policies use simple "Allow all access" to avoid auth.uid
 SELECT '🔧 FIXED: Type creation uses safe DO blocks to avoid conflicts with existing types' as type_fix;
 SELECT '🔧 FIXED: Function creation uses DROP FUNCTION IF EXISTS to avoid return type conflicts' as function_fix;
 SELECT '🔧 FIXED: Trigger creation uses DROP TRIGGER IF EXISTS to avoid trigger conflicts' as trigger_fix;
+SELECT '🔧 FIXED: Function update_updated_at_column uses CREATE OR REPLACE to avoid dependency conflicts' as function_dependency_fix;
 SELECT '🎨 NEW: Added banner generation and GitHub storage support' as banner_feature;
