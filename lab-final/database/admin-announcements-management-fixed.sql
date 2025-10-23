@@ -429,6 +429,9 @@ $$ LANGUAGE plpgsql;
 -- =====================================================
 
 -- Trigger to update updated_at timestamp
+-- Drop existing function first to avoid conflicts
+DROP FUNCTION IF EXISTS update_updated_at_column();
+
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -438,6 +441,9 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Apply triggers to all tables
+-- Drop existing triggers first to avoid conflicts
+DROP TRIGGER IF EXISTS update_announcements_updated_at ON announcements;
+
 CREATE TRIGGER update_announcements_updated_at
     BEFORE UPDATE ON announcements
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
@@ -498,4 +504,5 @@ SELECT '🔧 FIXED: Removed foreign key constraints to avoid "system" user refer
 SELECT '🔧 FIXED: RLS policies use simple "Allow all access" to avoid auth.uid() type conflicts' as rls_fix;
 SELECT '🔧 FIXED: Type creation uses safe DO blocks to avoid conflicts with existing types' as type_fix;
 SELECT '🔧 FIXED: Function creation uses DROP FUNCTION IF EXISTS to avoid return type conflicts' as function_fix;
+SELECT '🔧 FIXED: Trigger creation uses DROP TRIGGER IF EXISTS to avoid trigger conflicts' as trigger_fix;
 SELECT '🎨 NEW: Added banner generation and GitHub storage support' as banner_feature;
