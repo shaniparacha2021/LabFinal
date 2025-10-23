@@ -8,39 +8,55 @@
 -- STEP 1: CREATE ENUMS AND TYPES
 -- =====================================================
 
--- Subscription plan types
-CREATE TYPE subscription_plan AS ENUM (
-    'TRIAL',
-    'MONTHLY', 
-    'ANNUAL',
-    'LIFETIME'
-);
+-- Subscription plan types (only create if not exists)
+DO $$ BEGIN
+    CREATE TYPE subscription_plan AS ENUM (
+        'TRIAL',
+        'MONTHLY', 
+        'ANNUAL',
+        'LIFETIME'
+    );
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
--- Payment status types
-CREATE TYPE payment_status AS ENUM (
-    'PAID',
-    'PENDING',
-    'OVERDUE',
-    'FAILED',
-    'REFUNDED'
-);
+-- Payment status types (only create if not exists)
+DO $$ BEGIN
+    CREATE TYPE payment_status AS ENUM (
+        'PAID',
+        'PENDING',
+        'OVERDUE',
+        'FAILED',
+        'REFUNDED'
+    );
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
--- Subscription status types
-CREATE TYPE subscription_status AS ENUM (
-    'ACTIVE',
-    'EXPIRED',
-    'PENDING_RENEWAL',
-    'SUSPENDED',
-    'CANCELLED'
-);
+-- Subscription status types (only create if not exists)
+DO $$ BEGIN
+    CREATE TYPE subscription_status AS ENUM (
+        'ACTIVE',
+        'EXPIRED',
+        'PENDING_RENEWAL',
+        'SUSPENDED',
+        'CANCELLED'
+    );
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
--- Reminder types
-CREATE TYPE reminder_type AS ENUM (
-    'EXPIRY_REMINDER',
-    'PAYMENT_DUE',
-    'PAYMENT_OVERDUE',
-    'RENEWAL_REMINDER'
-);
+-- Reminder types (only create if not exists)
+DO $$ BEGIN
+    CREATE TYPE reminder_type AS ENUM (
+        'EXPIRY_REMINDER',
+        'PAYMENT_DUE',
+        'PAYMENT_OVERDUE',
+        'RENEWAL_REMINDER'
+    );
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- =====================================================
 -- STEP 2: CREATE SUBSCRIPTION PLANS TABLE
@@ -388,3 +404,6 @@ SELECT '📊 Tables created: subscription_plans, admin_subscriptions, subscripti
 SELECT '🔐 RLS policies enabled for all tables' as security;
 SELECT '⚡ Functions created: create_admin_subscription, update_subscription_status, extend_subscription, check_expired_subscriptions' as functions;
 SELECT '🎯 Default subscription plans inserted: Trial, Monthly, Annual, Lifetime' as plans;
+SELECT '🔧 FIXED: All admin_id references use TEXT to match existing admins table structure' as fix;
+SELECT '🔧 FIXED: RLS policies use simple "Allow all access" to avoid auth.uid() type conflicts' as rls_fix;
+SELECT '🔧 FIXED: Type creation uses safe DO blocks to avoid conflicts with existing types' as type_fix;
