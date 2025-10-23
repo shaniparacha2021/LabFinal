@@ -8,29 +8,41 @@
 -- STEP 1: CREATE ENUMS AND TYPES
 -- =====================================================
 
--- Announcement types
-CREATE TYPE announcement_type AS ENUM (
-    'SYSTEM_UPDATES',
-    'MAINTENANCE_ALERTS',
-    'NEW_FEATURE_RELEASES',
-    'SUBSCRIPTION_OFFERS',
-    'GENERAL_NOTICES'
-);
+-- Announcement types (only create if not exists)
+DO $$ BEGIN
+    CREATE TYPE announcement_type AS ENUM (
+        'SYSTEM_UPDATES',
+        'MAINTENANCE_ALERTS',
+        'NEW_FEATURE_RELEASES',
+        'SUBSCRIPTION_OFFERS',
+        'GENERAL_NOTICES'
+    );
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
--- Announcement status
-CREATE TYPE announcement_status AS ENUM (
-    'DRAFT',
-    'ACTIVE',
-    'ARCHIVED',
-    'EXPIRED'
-);
+-- Announcement status (only create if not exists)
+DO $$ BEGIN
+    CREATE TYPE announcement_status AS ENUM (
+        'DRAFT',
+        'ACTIVE',
+        'ARCHIVED',
+        'EXPIRED'
+    );
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
--- Notification types
-CREATE TYPE notification_type AS ENUM (
-    'POPUP',
-    'BANNER',
-    'BOTH'
-);
+-- Notification types (only create if not exists)
+DO $$ BEGIN
+    CREATE TYPE notification_type AS ENUM (
+        'POPUP',
+        'BANNER',
+        'BOTH'
+    );
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- =====================================================
 -- STEP 2: CREATE ANNOUNCEMENTS TABLE
@@ -461,3 +473,4 @@ SELECT '⚡ Functions created: create_announcement, broadcast_announcement, mark
 SELECT '🎯 Sample announcements inserted: Welcome, Maintenance Alert, New Feature Release' as samples;
 SELECT '🔧 FIXED: All admin_id references use TEXT to match existing admins table structure' as fix;
 SELECT '🔧 FIXED: RLS policies use simple "Allow all access" to avoid auth.uid() type conflicts' as rls_fix;
+SELECT '🔧 FIXED: Type creation uses safe DO blocks to avoid conflicts with existing types' as type_fix;

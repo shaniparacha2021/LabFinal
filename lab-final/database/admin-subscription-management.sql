@@ -105,6 +105,8 @@ CREATE TABLE IF NOT EXISTS subscription_payments (
 
 -- =====================================================
 -- STEP 5: CREATE RENEWAL REMINDERS TABLE
+   -- Execute in Supabase SQL Editor
+   -- File: database/admin-subscription-management-fixed.sql
 -- =====================================================
 
 CREATE TABLE IF NOT EXISTS subscription_reminders (
