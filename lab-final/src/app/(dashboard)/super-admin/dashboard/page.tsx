@@ -18,6 +18,7 @@ import {
   BarChart3,
   AlertTriangle,
   UserPlus,
+  CreditCard,
   Image
 } from 'lucide-react'
 
@@ -143,6 +144,10 @@ export default function SuperAdminDashboard() {
               <Button variant="default" size="sm" onClick={() => router.push('/super-admin/admin-management')}>
                 <UserPlus className="h-4 w-4 mr-2" />
                 Admin Management
+              </Button>
+              <Button variant="default" size="sm" onClick={() => router.push('/super-admin/subscription-management')}>
+                <CreditCard className="h-4 w-4 mr-2" />
+                Subscriptions
               </Button>
               <Button variant="outline" size="sm" onClick={() => router.push('/super-admin/settings')}>
                 <Settings className="h-4 w-4 mr-2" />
