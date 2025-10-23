@@ -43,10 +43,7 @@ export async function GET(request: NextRequest) {
       .from('announcements')
       .select(`
         *,
-        created_by_user:users!announcements_created_by_fkey(name, email),
-        updated_by_user:users!announcements_updated_by_fkey(name, email),
-        broadcasts:announcement_broadcasts(id, status, total_recipients, successful_deliveries, broadcasted_at),
-        view_count:announcement_views(count)
+        broadcasts:announcement_broadcasts(id, status, total_recipients, successful_deliveries, broadcasted_at)
       `, { count: 'exact' })
 
     // Apply filters

@@ -32,20 +32,16 @@ export async function GET(
       .from('announcements')
       .select(`
         *,
-        created_by_user:users!announcements_created_by_fkey(name, email),
-        updated_by_user:users!announcements_updated_by_fkey(name, email),
         broadcasts:announcement_broadcasts(
           id, status, total_recipients, successful_deliveries, 
           failed_deliveries, broadcasted_at, scheduled_at, error_message
         ),
         views:announcement_views(
-          id, admin_id, viewed_at, view_type, is_dismissed, dismissed_at,
-          admin:admins(full_name, email)
+          id, admin_id, viewed_at, view_type, is_dismissed, dismissed_at
         ),
         notifications:announcement_notifications(
           id, admin_id, notification_type, is_read, is_dismissed,
-          read_at, dismissed_at,
-          admin:admins(full_name, email)
+          read_at, dismissed_at
         )
       `)
       .eq('id', params.id)

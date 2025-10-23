@@ -39,14 +39,7 @@ export async function GET(
     // Get payment history for subscription
     const { data: payments, error: paymentsError } = await supabaseAdmin
       .from('subscription_payments')
-      .select(`
-        *,
-        admins!inner(
-          id,
-          full_name,
-          email
-        )
-      `)
+      .select('*')
       .eq('subscription_id', params.id)
       .order('created_at', { ascending: false })
 
@@ -73,7 +66,7 @@ export async function GET(
 
     return NextResponse.json({
       payments: payments || [],
-      statistics: {
+      stats: {
         totalPaid,
         totalPending,
         totalOverdue,
@@ -82,7 +75,7 @@ export async function GET(
     })
 
   } catch (error) {
-    console.error('Get payments error:', error)
+    console.error('Payments error:', error)
     return NextResponse.json(
       { message: 'Internal server error' },
       { status: 500 }
@@ -221,13 +214,19 @@ export async function POST(
         subscription_id: params.id,
         notification_type: 'PAYMENT_RECORDED',
         title: 'Payment Recorded',
-        message: `Payment of PKR ${amountPkr} has been recorded for your subscription.`,
-        action_url: '/admin/subscription'
+        message: `Payment of PKR ${amountPkr} has been recorded for your ${subscription.plan_type} subscription.`,
+        action_url: `/admin/subscriptions/${params.id}`,
+        metadata: {
+          payment_id: newPayment.id,
+          amount_pkr: amountPkr,
+          payment_status: paymentStatus
+        }
       })
 
     return NextResponse.json({
-      message: 'Payment record created successfully',
-      payment: newPayment
+      success: true,
+      payment: newPayment,
+      message: 'Payment record created successfully'
     })
 
   } catch (error) {
