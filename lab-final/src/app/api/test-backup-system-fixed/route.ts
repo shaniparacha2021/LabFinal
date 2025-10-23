@@ -82,8 +82,8 @@ export async function GET(request: NextRequest) {
       if (testUser) {
         const { error: fkError } = await supabaseAdmin
           .rpc('create_backup', {
-            p_backup_type: 'FULL',
             p_backup_name: 'Test Backup',
+            p_backup_type: 'FULL',
             p_description: 'Test backup for FK compatibility',
             p_created_by: testUser.id
           })
@@ -118,8 +118,8 @@ export async function GET(request: NextRequest) {
         switch (funcName) {
           case 'create_backup':
             testParams = {
-              p_backup_type: 'FULL',
               p_backup_name: 'Test Backup',
+              p_backup_type: 'FULL',
               p_description: 'Test backup',
               p_created_by: 'test-user-id'
             }

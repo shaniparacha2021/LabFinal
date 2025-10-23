@@ -40,8 +40,8 @@ export async function POST(request: NextRequest) {
     // Create backup using database function
     const { data: backupId, error } = await supabaseAdmin
       .rpc('create_backup', {
-        p_backup_type: backupType,
         p_backup_name: backupName,
+        p_backup_type: backupType,
         p_description: description,
         p_created_by: decoded.userId.toString()
       })

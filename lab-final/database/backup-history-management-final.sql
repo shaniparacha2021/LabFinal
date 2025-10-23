@@ -1,8 +1,10 @@
 -- =====================================================
--- BACKUP HISTORY MANAGEMENT SYSTEM
+-- BACKUP HISTORY MANAGEMENT SYSTEM - FINAL CORRECTED VERSION
 -- =====================================================
 -- This file creates the backup history management system
 -- for tracking system backups and restore operations
+-- FIXED: Foreign key references to use TEXT instead of UUID
+-- FIXED: Function parameter ordering for PostgreSQL compatibility
 
 -- Create backup history table
 CREATE TABLE IF NOT EXISTS backup_history (
@@ -75,6 +77,7 @@ CREATE TRIGGER update_backup_history_updated_at
     EXECUTE FUNCTION update_backup_history_updated_at();
 
 -- Create backup management functions
+-- FIXED: Parameter order - required parameters first, then optional with defaults
 CREATE OR REPLACE FUNCTION create_backup(
     p_backup_name VARCHAR(255),
     p_backup_type VARCHAR(50) DEFAULT 'FULL',
@@ -371,3 +374,5 @@ SELECT '📊 Tables: backup_history, restore_history' as tables;
 SELECT '🔧 Functions: create_backup, update_backup_status, get_backup_history, get_backup_statistics, create_restore, update_restore_status' as functions;
 SELECT '🔒 RLS Policies: Super Admin access, Service role access' as policies;
 SELECT '📈 Sample Data: 3 backup records inserted' as sample_data;
+SELECT '🔧 FIXED: Foreign key references now use TEXT instead of UUID' as fix_1;
+SELECT '🔧 FIXED: Function parameter ordering for PostgreSQL compatibility' as fix_2;

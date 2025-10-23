@@ -77,8 +77,8 @@ CREATE TRIGGER update_backup_history_updated_at
 
 -- Create backup management functions
 CREATE OR REPLACE FUNCTION create_backup(
-    p_backup_type VARCHAR(50) DEFAULT 'FULL',
     p_backup_name VARCHAR(255),
+    p_backup_type VARCHAR(50) DEFAULT 'FULL',
     p_description TEXT DEFAULT NULL,
     p_created_by TEXT DEFAULT NULL
 )
@@ -93,14 +93,14 @@ BEGIN
 
     -- Create backup record
     INSERT INTO backup_history (
-        backup_type,
         backup_name,
+        backup_type,
         description,
         created_by,
         status
     ) VALUES (
-        p_backup_type,
         p_backup_name,
+        p_backup_type,
         p_description,
         p_created_by,
         'PENDING'
