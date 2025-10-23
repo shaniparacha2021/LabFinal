@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabase, supabaseAdmin } from '@/lib/supabase'
 import { cookies } from 'next/headers'
 import jwt from 'jsonwebtoken'
 
@@ -109,8 +109,8 @@ export async function PUT(request: NextRequest) {
       )
     }
 
-    // Log profile update activity
-    await supabase
+    // Log profile update activity (using admin client to bypass RLS)
+    await supabaseAdmin
       .from('activity_logs')
       .insert({
         user_id: decoded.userId,

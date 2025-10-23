@@ -41,50 +41,50 @@ export async function GET(request: NextRequest) {
       failedLoginsToday,
       accountLockouts
     ] = await Promise.all([
-      // Total users count
-      supabase
+      // Total users count (using admin client to bypass RLS)
+      supabaseAdmin
         .from('users')
         .select('id', { count: 'exact' })
         .eq('is_active', true),
 
-      // Total login attempts (last 30 days)
-      supabase
+      // Total login attempts (last 30 days) (using admin client to bypass RLS)
+      supabaseAdmin
         .from('login_attempts')
         .select('id', { count: 'exact' })
         .gte('created_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()),
 
-      // Recent activity (last 7 days)
-      supabase
+      // Recent activity (last 7 days) (using admin client to bypass RLS)
+      supabaseAdmin
         .from('activity_logs')
         .select('*')
         .gte('timestamp', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
         .order('timestamp', { ascending: false })
         .limit(10),
 
-      // Active sessions
-      supabase
+      // Active sessions (using admin client to bypass RLS)
+      supabaseAdmin
         .from('user_sessions')
         .select('*')
         .eq('is_active', true)
         .gt('expires_at', new Date().toISOString()),
 
-      // Failed logins today
-      supabase
+      // Failed logins today (using admin client to bypass RLS)
+      supabaseAdmin
         .from('login_attempts')
         .select('id', { count: 'exact' })
         .eq('success', false)
         .gte('created_at', new Date().toISOString().split('T')[0]),
 
-      // Active account lockouts
-      supabase
+      // Active account lockouts (using admin client to bypass RLS)
+      supabaseAdmin
         .from('account_lockouts')
         .select('*')
         .eq('is_active', true)
         .gt('lockout_until', new Date().toISOString())
     ])
 
-    // Calculate login success rate
-    const { data: successfulLogins, count: successfulCount } = await supabase
+    // Calculate login success rate (using admin client to bypass RLS)
+    const { data: successfulLogins, count: successfulCount } = await supabaseAdmin
       .from('login_attempts')
       .select('id', { count: 'exact' })
       .eq('success', true)
@@ -93,8 +93,8 @@ export async function GET(request: NextRequest) {
     const totalLogins = (totalLoginAttempts.count || 0) + (successfulCount || 0)
     const successRate = totalLogins > 0 ? ((successfulCount || 0) / totalLogins) * 100 : 0
 
-    // Get user role distribution
-    const { data: roleDistribution } = await supabase
+    // Get user role distribution (using admin client to bypass RLS)
+    const { data: roleDistribution } = await supabaseAdmin
       .from('users')
       .select('role')
       .eq('is_active', true)

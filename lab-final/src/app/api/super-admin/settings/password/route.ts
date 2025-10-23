@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabase, supabaseAdmin } from '@/lib/supabase'
 import { cookies } from 'next/headers'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
@@ -101,8 +101,8 @@ export async function PUT(request: NextRequest) {
       // Don't fail the request if email fails
     }
 
-    // Log password change activity
-    await supabase
+    // Log password change activity (using admin client to bypass RLS)
+    await supabaseAdmin
       .from('activity_logs')
       .insert({
         user_id: decoded.userId,

@@ -41,8 +41,8 @@ export async function GET(request: NextRequest) {
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
 
-    // Build query
-    let query = supabase
+    // Build query (using admin client to bypass RLS)
+    let query = supabaseAdmin
       .from('activity_logs')
       .select('*', { count: 'exact' })
       .order('timestamp', { ascending: false })
@@ -79,8 +79,8 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Get unique actions for filter dropdown
-    const { data: actions } = await supabase
+    // Get unique actions for filter dropdown (using admin client to bypass RLS)
+    const { data: actions } = await supabaseAdmin
       .from('activity_logs')
       .select('action')
       .order('action')
