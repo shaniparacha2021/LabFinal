@@ -1,9 +1,9 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 
-export default function SimpleVerify() {
+function SimpleVerifyContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [email, setEmail] = useState<string | null>(null)
@@ -114,5 +114,24 @@ export default function SimpleVerify() {
         </button>
       </div>
     </div>
+  )
+}
+
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+        <p className="mt-2 text-gray-600">Loading verification page...</p>
+      </div>
+    </div>
+  )
+}
+
+export default function SimpleVerify() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <SimpleVerifyContent />
+    </Suspense>
   )
 }

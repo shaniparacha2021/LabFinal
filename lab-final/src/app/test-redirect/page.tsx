@@ -1,9 +1,9 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 
-export default function TestRedirect() {
+function TestRedirectContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [email, setEmail] = useState<string | null>(null)
@@ -38,5 +38,24 @@ export default function TestRedirect() {
         </button>
       </div>
     </div>
+  )
+}
+
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+        <p className="mt-2 text-gray-600">Loading test page...</p>
+      </div>
+    </div>
+  )
+}
+
+export default function TestRedirect() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <TestRedirectContent />
+    </Suspense>
   )
 }
