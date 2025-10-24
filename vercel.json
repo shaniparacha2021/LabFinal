@@ -1,19 +1,14 @@
 {
-  "version": 2,
-  "functions": {
-    "src/app/api/**/*.ts": {
-      "maxDuration": 30
-    }
+  "env": {
+    "NEXT_PUBLIC_SUPABASE_URL": "https://lab-final-j9jvkh366-muhammad-shams-prachas-projects.vercel.app",
+    "NEXT_PUBLIC_APP_URL": "https://lab-final-j9jvkh366-muhammad-shams-prachas-projects.vercel.app",
+    "NEXTAUTH_URL": "https://lab-final-j9jvkh366-muhammad-shams-prachas-projects.vercel.app"
   },
-  "headers": [
-    {
-      "source": "/assets/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_SUPABASE_URL": "https://lab-final-j9jvkh366-muhammad-shams-prachas-projects.vercel.app",
+      "NEXT_PUBLIC_APP_URL": "https://lab-final-j9jvkh366-muhammad-shams-prachas-projects.vercel.app",
+      "NEXTAUTH_URL": "https://lab-final-j9jvkh366-muhammad-shams-prachas-projects.vercel.app"
     }
-  ]
+  }
 }
